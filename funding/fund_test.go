@@ -7,13 +7,13 @@ import (
 )
 
 type FundServer struct {
-	Commands chan interface{}
+	commands chan interface{}
 	fund     *Fund
 }
 
 func NewFundServer(initialBalance int) *FundServer {
 	server := &FundServer{
-		Commands: make(chan interface{}),
+		commands: make(chan interface{}),
 		fund:     NewFund(initialBalance),
 	}
 
@@ -22,8 +22,18 @@ func NewFundServer(initialBalance int) *FundServer {
 	return server
 }
 
+func (s *FundServer) Balance() int {
+	responseChan := make(chan int)
+	s.commands <- BalanceCommand{Response: responseChan}
+	return <-responseChan
+}
+
+func (s *FundServer) Withdraw(amount int) {
+	s.commands <- WithdrawCommand{Amount: amount}
+}
+
 func (s *FundServer) loop() {
-	for command := range s.Commands {
+	for command := range s.commands {
 		switch command.(type) {
 		case WithdrawCommand:
 			withdrawal := command.(WithdrawCommand)
@@ -71,16 +81,14 @@ func BenchmarkFund(b *testing.B) {
 			defer wg.Done()
 
 			for i := 0; i < dollarsPerFounder; i++ {
-				server.Commands <- WithdrawCommand{Amount: 1}
+				server.Withdraw(1)
 			}
 		}()
 	}
 
 	wg.Wait()
 
-	balanceResponseChan := make(chan int)
-	server.Commands <- BalanceCommand{Response: balanceResponseChan}
-	balance := <-balanceResponseChan
+	balance := server.Balance()
 
 	if balance != 0 {
 		b.Error("Balance wasn't zero:", balance)
