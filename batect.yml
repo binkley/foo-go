@@ -1,0 +1,33 @@
+containers:
+  build-env:
+    image: golang:1.13.8-alpine3.11
+    volumes:
+      - local: .
+        container: /code
+        options: cached
+    working_directory: /code
+    run_as_current_user:
+      enabled: true
+      home_directory: /home/container-user
+
+tasks:
+  build:
+    description: Builds the program
+    run:
+      container: build-env
+      command: go build
+  lint:
+    description: Builds the program
+    run:
+      container: build-env
+      command: ./bin/golangci-lint run ./...
+  test:
+    description: Tests the program
+    run:
+      container: build-env
+      command: go test ./...
+  run:
+    description: Runs the demo program
+    run:
+      container: build-env
+      command: ./foo-go
