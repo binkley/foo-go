@@ -1,0 +1,17 @@
+name: Full build and verify
+
+on: [push]
+
+jobs:
+  build:
+    name: Builds and verifies on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Build
+        uses: cedrickring/golang-action@master
