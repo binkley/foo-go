@@ -8,10 +8,28 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        go-version: [1.14.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - uses: actions/checkout@master
+      - name: Caching
+        uses: actions/cache@master
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Install Go
+        uses: actions/setup-go@master
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Checkout code
+        uses: actions/checkout@master
 
       - name: Build
-        uses: cedrickring/golang-action@master
+        run: go build
+
+      - name: Test
+        run: go test ./...
