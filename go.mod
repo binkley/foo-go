@@ -1,5 +1,5 @@
 module github.com/binkley/foo-go
 
-go 1.13
+go 1.14
 
 require rsc.io/quote v1.5.2
