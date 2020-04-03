@@ -5,7 +5,15 @@ Go module experiment
 ## Building
 
 `go build` - local binary, try with `./foo-go` in project root
-`go install` - try with `~/go/bin/foo-go`
+
+### Linting
+
+`./install-golangci-lint-local.sh` - installs linter in `./bin`
+
+### Batect
+
+`./batect build` - checks build success (local binary not created)
+`./batect -T` - lists tasks
 
 ## Credits
 
