@@ -1,6 +1,6 @@
 containers:
   build-env:
-    image: golang:1.14.1-alpine3.11
+    image: golang:1.14.2-alpine3.11
     volumes:
       - local: .
         container: /code
