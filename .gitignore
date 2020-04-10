@@ -1,3 +1,4 @@
+/.batect/
 /bin/
 /foo-go
 /foo-go.iml
