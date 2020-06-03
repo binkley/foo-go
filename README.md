@@ -15,6 +15,9 @@ Go module experiment
 `./batect build` - checks build success (local binary not created)
 `./batect -T` - lists tasks
 
+Note: Troubles when running on MacOS for `lint` task: Running the local
+install script pulls down an OSX binary; Batect needs a Linux binary.
+
 ## Credits
 
 * https://github.com/golang/go/wiki/Modules
